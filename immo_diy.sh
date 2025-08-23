@@ -106,8 +106,8 @@ rm -rf package/luci-theme-design/root/etc/uci-defaults/30_luci-theme-design
 sed -i "s|services|nas|g" feeds/luci/applications/luci-app-qbittorrent/root/usr/share/luci/menu.d/luci-app-qbittorrent.json
 sed -i "s|services|network|g" feeds/luci/applications/luci-app-nlbwmon/root/usr/share/luci/menu.d/luci-app-nlbwmon.json
 
-# 微信推送&全能推送（保留）
-sed -i "s|qidian|bilibili|g" package/luci-app-pushbot/root/usr/bin/pushbot/pushbot
+# 微信推送&全能推送
+#sed -i "s|qidian|bilibili|g" package/luci-app-pushbot/root/usr/bin/pushbot/pushbot
 
 # DNS劫持（保持已有修改）
 sed -i '/dns_redirect/d' package/network/services/dnsmasq/files/dhcp.conf
@@ -146,39 +146,9 @@ chmod +x ./clash* ; rm -rf ./*.gz
 # 返回工程根目录以便后续操作
 cd ../../../..
 
-# ========== 修改默认 LAN IP 为 192.168.50.200 ==========
-# 说明：OpenWrt 的默认 IP 通常在 package/base-files/files/bin/config_generate 中设置。
-# 我们做两级替换：如果文件存在则替换行；如果不存在则尝试在 openwrt 源中搜索可能的位置并替换。
-DEFAULT_IP="192.168.50.200"
-CFG_FILE="package/base-files/files/bin/config_generate"
-
-if [ -f "$CFG_FILE" ]; then
-    echo "修改默认 LAN IP 为 $DEFAULT_IP (修改 $CFG_FILE)"
-    # 常见的匹配形式例如: uci set network.lan.ipaddr='192.168.1.1'
-    sed -i "s/network.lan.ipaddr='[0-9]\+\.[0-9]\+\.[0-9]\+\.[0-9]\+'/'$DEFAULT_IP'/g" "$CFG_FILE"
-    # 兼容另一种写法：o\tsed form or double quotes
-    sed -i "s/network.lan.ipaddr=\"[0-9]\+\.[0-9]\+\.[0-9]\+\.[0-9]\+\"/network.lan.ipaddr=\"$DEFAULT_IP\"/g" "$CFG_FILE"
-    # 如果上面替换未生效（文件中可能采用别的书写），追加确保默认值：
-    if ! grep -q "$DEFAULT_IP" "$CFG_FILE"; then
-        echo "未找到现有的默认 LAN IP 设置，尝试追加 uci 设置以覆盖默认值"
-        # 在文件末尾追加设置（以防万一）
-        echo "uci set network.lan.ipaddr='$DEFAULT_IP'" >> "$CFG_FILE"
-        echo "uci commit network" >> "$CFG_FILE"
-    fi
-else
-    echo "警告：未找到 $CFG_FILE，尝试在源代码中搜索并替换默认 IP"
-    # 在源码中搜索常见文件并替换
-    FOUND_FILES=$(grep -RIl "network.lan.ipaddr" || true)
-    if [ -n "$FOUND_FILES" ]; then
-        echo "在以下文件中替换默认 IP:"
-        echo "$FOUND_FILES"
-        for f in $FOUND_FILES; do
-            sed -i "s/network.lan.ipaddr='[0-9]\+\.[0-9]\+\.[0-9]\+\.[0-9]\+'/'$DEFAULT_IP'/g" "$f" || true
-            sed -i "s/network.lan.ipaddr=\"[0-9]\+\.[0-9]\+\.[0-9]\+\.[0-9]\+\"/network.lan.ipaddr=\"$DEFAULT_IP\"/g" "$f" || true
-        done
-    else
-        echo "未找到任何含有 network.lan.ipaddr 的文件，请手动检查并修改默认 IP。"
-    fi
-fi
+# ========== 修改默认 LAN IP ==========
+# 使用你指定的简单全局替换命令
+# Default IP
+sed -i 's/192.168.1.1/192.168.50.200/g' package/base-files/files/bin/config_generate
 
 echo "DIY 脚本执行完成。"
