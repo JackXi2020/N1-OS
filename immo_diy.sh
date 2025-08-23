@@ -27,18 +27,18 @@ rm -rf ./feeds/luci/applications/luci-app-unblockneteasemusic
 rm -rf ./feeds/packages/net/aria2
 rm -rf ./feeds/luci/themes/luci-theme-argon
 git clone --depth 1 https://github.com/jerrykuku/luci-theme-argon feeds/luci/themes/luci-theme-argon
-git clone --depth 1 https://github.com/danchexiaoyang/luci-app-kodexplorer package/luci-app-kodexplorer
-git clone --depth 1 https://github.com/sbwml/feeds_packages_net_aria2 feeds/packages/net/aria2
+#git clone --depth 1 https://github.com/danchexiaoyang/luci-app-kodexplorer package/luci-app-kodexplorer
+#git clone --depth 1 https://github.com/sbwml/feeds_packages_net_aria2 feeds/packages/net/aria2
 git clone --depth 1 https://github.com/sbwml/packages_lang_golang feeds/packages/lang/golang
-git clone --depth 1 https://github.com/zyqfork/luci-app-pushbot package/luci-app-pushbot
+#git clone --depth 1 https://github.com/zyqfork/luci-app-pushbot package/luci-app-pushbot
 git clone --depth 1 https://github.com/jerrykuku/luci-app-argon-config package/luci-app-argon-config
 git clone --depth 1 https://github.com/sbwml/v2ray-geodata package/v2ray-geodata
-git clone --depth 1 https://github.com/fw876/helloworld package/helloworld
+#git clone --depth 1 https://github.com/fw876/helloworld package/helloworld
 git clone --depth 1 https://github.com/chenmozhijin/luci-app-adguardhome package/luci-app-adguardhome
 git clone --depth 1 https://github.com/sbwml/luci-app-openlist package/luci-app-openlist
 git clone --depth 1 https://github.com/xiaorouji/openwrt-passwall-packages package/openwrt-passwall-packages
-git clone --depth 1 https://github.com/OldCoding/luci-app-filebrowser package/luci-app-filebrowser
-git clone --depth 1 https://github.com/sirpdboy/netspeedtest package/netspeedtest
+#git clone --depth 1 https://github.com/OldCoding/luci-app-filebrowser package/luci-app-filebrowser
+#git clone --depth 1 https://github.com/sirpdboy/netspeedtest package/netspeedtest
 #git clone --depth 1 https://github.com/UnblockNeteaseMusic/luci-app-unblockneteasemusic package/luci-app-unblockneteasemusic
 #git clone --depth 1 https://github.com/hudra0/luci-app-qosmate package/luci-app-qosmate
 #git clone --depth 1 https://github.com/hudra0/qosmate package/qosmate
@@ -55,8 +55,8 @@ svn_export "v5" "v2dat" "package/v2dat" "https://github.com/sbwml/luci-app-mosdn
 svn_export "main" "lucky" "package/lucky" "https://github.com/gdy666/luci-app-lucky"
 svn_export "main" "luci-app-lucky" "package/luci-app-lucky" "https://github.com/gdy666/luci-app-lucky"
 svn_export "openwrt-23.05" "themes/luci-theme-design" "package/luci-theme-design" "https://github.com/coolsnowwolf/luci"
-svn_export "main" "easytier" "package/easytier" "https://github.com/EasyTier/luci-app-easytier"
-svn_export "main" "luci-app-easytier" "package/luci-app-easytier" "https://github.com/EasyTier/luci-app-easytier"
+#svn_export "main" "easytier" "package/easytier" "https://github.com/EasyTier/luci-app-easytier"
+#svn_export "main" "luci-app-easytier" "package/luci-app-easytier" "https://github.com/EasyTier/luci-app-easytier"
 
 rm -rf package/luci-theme-design/root/etc/uci-defaults/30_luci-theme-design
 
@@ -71,7 +71,7 @@ rm -rf package/luci-theme-design/root/etc/uci-defaults/30_luci-theme-design
 sed -i "s|services|nas|g" feeds/luci/applications/luci-app-qbittorrent/root/usr/share/luci/menu.d/luci-app-qbittorrent.json
 sed -i "s|services|network|g" feeds/luci/applications/luci-app-nlbwmon/root/usr/share/luci/menu.d/luci-app-nlbwmon.json
 # 微信推送&全能推送
-sed -i "s|qidian|bilibili|g" package/luci-app-pushbot/root/usr/bin/pushbot/pushbot
+#sed -i "s|qidian|bilibili|g" package/luci-app-pushbot/root/usr/bin/pushbot/pushbot
 # DNS劫持
 sed -i '/dns_redirect/d' package/network/services/dnsmasq/files/dhcp.conf
 # 个性化设置
@@ -80,12 +80,15 @@ sed -i "s|breakings|OldCoding|g" package/luci-app-amlogic/root/etc/config/amlogi
 sed -i "s|OpenWrt|openwrt_packit_arm|g" package/luci-app-amlogic/root/etc/config/amlogic
 sed -i "s|ARMv8|ARMv8-im|g" package/luci-app-amlogic/root/etc/config/amlogic
 rm -rf package/luci-app-netspeedtest/po/zh_Hans
+
 cd package
 # NTP服务器
 sed -i "s|\'time1\.apple\.com\'|\'0\.openwrt\.pool\.ntp\.org\'|g" base-files/files/bin/config_generate
 sed -i "s|\'time1\.google\.com\'|\'1\.openwrt\.pool\.ntp\.org\'|g" base-files/files/bin/config_generate
 sed -i "s|\'time\.cloudflare\.com\'|\'2\.openwrt\.pool\.ntp\.org\'|g" base-files/files/bin/config_generate
 sed -i "s|\'pool\.ntp\.org\'|\'3\.openwrt\.pool\.ntp\.org\'|g" base-files/files/bin/config_generate
+# Default IP
+sed -i 's/192.168.1.1/192.168.50.200/g' package/base-files/files/bin/config_generate
 # 汉化
 curl -sfL -o ./convert_translation.sh https://github.com/kenzok8/small-package/raw/main/.github/diy/convert_translation.sh
 chmod +x ./convert_translation.sh && bash ./convert_translation.sh
@@ -104,5 +107,3 @@ mkdir ./core && cd ./core
 curl -sfL -o ./meta.tar.gz "$CORE_MATE" && tar -zxf ./meta.tar.gz && mv ./clash ./clash_meta
 #curl -sfL -o ./dev.tar.gz "$CORE_DEV" && tar -zxf ./dev.tar.gz
 chmod +x ./clash* ; rm -rf ./*.gz
-# 修改默认 IP 地址
-sed -i 's/192.168.1.1/192.168.50.200/g' package/base-files/files/bin/config_generate
